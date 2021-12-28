@@ -2,6 +2,8 @@
 package Persistence;
 
 import Model.Image;
+import Model.ProxyImage;
+import Model.RealImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -16,8 +18,10 @@ import java.io.InputStream;
 public class FileImageLoader implements ImageLoader {
     
     private final File[] file;
+    private int current;
 
     public FileImageLoader(File folder) {
+        this.current = 0;
         this.file = folder.listFiles(imageType());
     }
     
@@ -27,38 +31,40 @@ public class FileImageLoader implements ImageLoader {
 
     @Override
     public Image load() {
-        return imageAt(0);
-    }
-
-    private Image imageAt(int i) {
         
-        return new Image(){
-            @Override
-            public String name() {
-                return file[i].getName();
-            }
-
-            @Override
-            public InputStream stream() {
-                try{
-                    return new BufferedInputStream(new FileInputStream(file[i]));
-                } catch(FileNotFoundException e){
-                    return null;
-                }
-            }
-
-            @Override
-            public Image next() {
-                return i == file.length -1 ? imageAt(0) : imageAt(i+1);
-            }
-
-            @Override
-            public Image prev() {
-                return i == 0 ? imageAt(file.length-1) : imageAt(i-1);
-            }
-        };
+        if(file.length > 0){
+            return new ProxyImage(file[current]);
+        }else{
+            return null;
+        }
+  
+    }
+   
+    
+    @Override
+    public Image next() {
+        
+        if(current == file.length-1){
+            current = 0;
+        }else{
+            this.current++;
+        }
+        
+        return this.load();
+        
     }
 
+    @Override
+    public Image prev() {
+        
+        if(current == 0){
+            current = file.length-1;
+        }else{
+            this.current--;
+        }
+        return this.load();
+    }
+    
     
     
 }

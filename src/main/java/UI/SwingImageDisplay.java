@@ -31,7 +31,13 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
     @Override
     public void paint(Graphics g){
         if(current != null){
-            g.drawImage(imageOf(current), 0, 0, null);
+            g.drawImage(
+                    imageOf(current), 
+                    0, 
+                    0, 
+                    this.getWidth(), 
+                    this.getHeight(), 
+                    null);
         }
     }
 

@@ -4,8 +4,8 @@ package Controler;
  *
  * @author saul
  */
+import Persistence.ImageLoader;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -18,8 +18,10 @@ import UI.SwingImageDisplay;
 public class MainFrame extends JFrame {
 
     private ImageDisplay imageDisplay;
-
-    public MainFrame() {
+    private ImageLoader imageLoader;
+    
+    public MainFrame(ImageLoader imageLoader) {
+        this.imageLoader = imageLoader;
         this.setTitle("Image Viewer");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(800,600);
@@ -44,7 +46,7 @@ public class MainFrame extends JFrame {
     
     private ActionListener prevImage() {
         return (ActionEvent e) -> {
-            imageDisplay.show(imageDisplay.current().prev());           
+            imageDisplay.show(imageLoader.prev());           
         };
     }
     
@@ -56,7 +58,7 @@ public class MainFrame extends JFrame {
     
     private ActionListener nextImage() {
         return (ActionEvent e) -> {
-            imageDisplay.show(imageDisplay.current().next());
+            imageDisplay.show(imageLoader.next());
         };
     }
     
